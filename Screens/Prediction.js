@@ -6,19 +6,27 @@ import {
   Button,
   Image,
 } from 'react-native'
+import axios from 'axios'
 
 export default function Prediction({ route, navigation }) {
   const { image } = route.params
+  console.log('image in pred', image)
 
-  const removing = (img) => {
-    removeBackground(img).then((blob) => {
-      window.open(URL.createObjectURL(blob))
-    })
+  const apiCall = async (imageFile) => {
+    try {
+      const response = await axios.post('http://localhost:8000/remove', {
+        image: image,
+      })
+
+      console.log('API-Antwort:', response.data)
+    } catch (error) {
+      console.error('Fehler beim API-Aufruf:', error)
+    }
   }
 
   return (
     <View style={styles.container}>
-      <Text>in a few seconds you see the prediction</Text>
+      <Button title="API Call" onPress={() => apiCall(image)} />
       <Image
         style={{
           width: 300,
@@ -26,7 +34,7 @@ export default function Prediction({ route, navigation }) {
           borderWidth: 1,
           borderColor: 'red',
         }}
-        source={{ uri: image.uri }}
+        source={{ uri: `data:image/png;base64,${image}` }}
       />
     </View>
   )

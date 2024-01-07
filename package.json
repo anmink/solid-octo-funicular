@@ -15,18 +15,26 @@
     "@tensorflow/tfjs": "^4.15.0",
     "@tensorflow/tfjs-react-native": "^1.0.0",
     "axios": "^1.6.2",
+    "base64-js": "^1.5.1",
+    "buffer": "^6.0.3",
     "expo": "^49.0.21",
     "expo-asset": "^8.10.1",
     "expo-camera": "~13.4.4",
+    "expo-file-system": "~15.4.5",
+    "expo-image-picker": "~14.3.2",
     "expo-media-library": "~15.4.1",
+    "expo-permissions": "~14.2.1",
     "expo-sharing": "~11.5.0",
     "expo-status-bar": "~1.6.0",
     "express": "^4.18.2",
+    "fs.promises": "^0.1.2",
     "modern-rembg": "^0.0.2",
     "react": "18.2.0",
     "react-native": "0.72.6",
+    "react-native-base64": "^0.2.1",
     "react-native-safe-area-context": "4.6.3",
-    "react-native-screens": "~3.22.0"
+    "react-native-screens": "~3.22.0",
+    "rembg": "^1.0.6"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
