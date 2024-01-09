@@ -7,7 +7,6 @@ import {
   Button,
   Image,
 } from 'react-native'
-import { Permissions } from 'expo-permissions'
 import { useEffect, useRef, useState } from 'react'
 import { Camera } from 'expo-camera'
 import { shareAsync } from 'expo-sharing'
@@ -16,19 +15,13 @@ import * as ImagePicker from 'expo-image-picker'
 import * as FileSystem from 'expo-file-system'
 import { Buffer } from 'buffer'
 import axios from 'axios'
-import base64 from 'react-native-base64'
-import { image } from '@tensorflow/tfjs'
-import { encode } from 'base64-js'
 
 export default function Upload({ navigation }) {
   let cameraRef = useRef()
   const [hasCameraPermission, setHasCameraPermission] = useState()
   const [hasMediaLibraryPermission, setHasMediaLibraryPermission] = useState()
   const [photo, setPhoto] = useState()
-  const [pythonPhoto, setPythonPhoto] = useState()
   const [imageByte, setImageByte] = useState()
-  const img = '/Users/anne/Desktop/Kleidung/IMG_4919.jpg'
-  const [removedPhoto, setRemovedPhoto] = useState()
 
   useEffect(() => {
     ;(async () => {
@@ -128,7 +121,9 @@ export default function Upload({ navigation }) {
       console.log(imageByte)
 
       const response = await axios.post(
-        'https://testtrainoregon.onrender.com/remove',
+        //'https://testtrainoregon.onrender.com/remove',
+        'http://192.168.2.177:8082/remove',
+        //'http://localhost:8081/remove',
         imageByte
       )
       const base64img = response.data
