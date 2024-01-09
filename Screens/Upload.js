@@ -12,8 +12,6 @@ import { Camera } from 'expo-camera'
 import { shareAsync } from 'expo-sharing'
 import * as MediaLibrary from 'expo-media-library'
 import * as ImagePicker from 'expo-image-picker'
-import * as FileSystem from 'expo-file-system'
-import { Buffer } from 'buffer'
 import axios from 'axios'
 
 export default function Upload({ navigation }) {
@@ -43,37 +41,6 @@ export default function Upload({ navigation }) {
     )
   }
 
-  const checkFileAccess = async (result) => {
-    try {
-      const fileInfo = await FileSystem.getInfoAsync(result)
-      if (fileInfo.exists) {
-        console.log(
-          `Die Datei existiert. Zugriffsrechte: ${fileInfo.canRead}, ${fileInfo.canWrite}, ${fileInfo.canDelete}`
-        )
-      } else {
-        console.log('Die Datei existiert nicht.')
-      }
-    } catch (error) {
-      console.error('Fehler beim Überprüfen der Zugriffsrechte:', error)
-    }
-  }
-
-  const convertPhoto = () => {
-    const path = photo
-    console.log(path)
-    // Lese die Bilddaten aus der Datei
-    const imageBase64 = FileSystem.readAsStringAsync(path, {
-      encoding: FileSystem.EncodingType.Base64,
-    })
-    //console.log(imageBase64)
-
-    // Konvertiere den Base64-String in ein Byte-Array
-    const imageBuffer = Buffer.from(imageBase64, 'base64')
-    const imageBytes = new Uint8Array(imageBuffer)
-    //setPhoto(imageBytes)
-    setImageByte(imageBytes)
-  }
-
   let takePic = async () => {
     try {
       let options = {
@@ -82,7 +49,6 @@ export default function Upload({ navigation }) {
         exif: false,
       }
       const result = await cameraRef.current.takePictureAsync(options)
-      //console.log(result.base64)
       setPhoto(result.uri)
       setImageByte(result.base64)
     } catch (error) {
@@ -94,20 +60,15 @@ export default function Upload({ navigation }) {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       quality: 1,
+      base64: true,
     })
     //hier den API call to remove machen
-    console.log(result.assets[0])
+    //console.log(result.assets[0].base64, 'base64 aus pciked bilds')
     setPhoto(result.assets[0].uri)
+    setImageByte(result.assets[0].base64)
   }
 
   if (photo) {
-    /* const path = photo
-    const imageBase64 = FileSystem.readAsStringAsync(path, {
-      encoding: FileSystem.EncodingType.Base64,
-    })
-    const imageBuffer = Buffer.from(imageBase64, 'base64')
-    const imageBytes = new Uint8Array(imageBuffer)
-    setImageByte(imageBytes) */
     let sharePic = () => {
       shareAsync(photo.uri).then(() => {
         setPhoto(undefined)
@@ -118,19 +79,14 @@ export default function Upload({ navigation }) {
       /* MediaLibrary.saveToLibraryAsync(photo).then(() => {
         setPhoto(undefined)
       }) */
-      console.log(imageByte)
+      //console.log(imageByte)
 
       const response = await axios.post(
         //'https://testtrainoregon.onrender.com/remove',
         'http://192.168.2.177:8082/remove',
-        //'http://localhost:8081/remove',
         imageByte
       )
       const base64img = response.data
-      /*console.log('base64', base64img)
-        setRemovedPhoto(base64img)
-        console.log('state:', removedPhoto) */
-
       navigation.navigate('Prediction', {
         image: base64img,
       })
@@ -138,7 +94,6 @@ export default function Upload({ navigation }) {
 
     return (
       <SafeAreaView style={styles.container}>
-        {/* <Image style={styles.preview} source={{ uri: photo }} /> */}
         <Image
           style={styles.preview}
           source={{ uri: `data:image/png;base64,${imageByte}` }}

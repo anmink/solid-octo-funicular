@@ -10,15 +10,14 @@ import axios from 'axios'
 
 export default function Prediction({ route, navigation }) {
   const { image } = route.params
-  console.log('image in pred', image)
 
-  const apiCall = async (imageFile) => {
+  const apiCall = async () => {
     try {
-      const response = await axios.post('http://localhost:8000/remove', {
+      await axios.post('http://localhost:8000/remove', {
         image: image,
       })
 
-      console.log('API-Antwort:', response.data)
+      //console.log('API-Antwort:', response.data)
     } catch (error) {
       console.error('Fehler beim API-Aufruf:', error)
     }
