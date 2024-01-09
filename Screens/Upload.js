@@ -12,6 +12,7 @@ import { Camera } from 'expo-camera'
 import { shareAsync } from 'expo-sharing'
 import * as MediaLibrary from 'expo-media-library'
 import * as ImagePicker from 'expo-image-picker'
+import * as ImageManipulator from 'expo-image-manipulator'
 import axios from 'axios'
 
 export default function Upload({ navigation }) {
@@ -41,6 +42,22 @@ export default function Upload({ navigation }) {
     )
   }
 
+  const resizeImage = async (image) => {
+    if (image) {
+      const resizedImage = await ImageManipulator.manipulateAsync(
+        image,
+        [{ resize: { width: 300, height: 400 } }],
+        {
+          compress: 0.5,
+          format: ImageManipulator.SaveFormat.JPEG,
+          base64: true,
+        }
+      )
+      setPhoto(resizedImage.uri)
+      setImageByte(resizedImage.base64)
+    }
+  }
+
   let takePic = async () => {
     try {
       let options = {
@@ -49,8 +66,7 @@ export default function Upload({ navigation }) {
         exif: false,
       }
       const result = await cameraRef.current.takePictureAsync(options)
-      setPhoto(result.uri)
-      setImageByte(result.base64)
+      resizeImage(result.uri)
     } catch (error) {
       console.error('fehler beim aufnehmen des bildes:', error)
     }
@@ -62,10 +78,7 @@ export default function Upload({ navigation }) {
       quality: 1,
       base64: true,
     })
-    //hier den API call to remove machen
-    //console.log(result.assets[0].base64, 'base64 aus pciked bilds')
-    setPhoto(result.assets[0].uri)
-    setImageByte(result.assets[0].base64)
+    resizeImage(result.assets[0].uri)
   }
 
   if (photo) {
