@@ -7,6 +7,7 @@ import Home from './Screens/Home'
 import Upload from './Screens/Upload'
 import Prediction from './Screens/Prediction'
 import Test from './Screens/Test'
+import Classification from './Screens/Classification'
 
 export default function App() {
   const Stack = createNativeStackNavigator()
@@ -17,6 +18,7 @@ export default function App() {
         <Stack.Screen name="Upload" component={Upload} />
         <Stack.Screen name="Prediction" component={Prediction} />
         <Stack.Screen name="Test" component={Test} />
+        <Stack.Screen name="Classification" component={Classification} />
       </Stack.Navigator>
     </NavigationContainer>
   )
