@@ -1,72 +1,34 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  SafeAreaView,
-  Button,
-  Image,
-} from 'react-native'
-import { useEffect, useRef, useState } from 'react'
-import * as tf from '@tensorflow/tfjs'
-import { decodeJpeg } from '@tensorflow/tfjs-react-native'
-import axios from 'axios'
+import React, { useEffect, useState } from 'react'
+import { Text, View, Button } from 'react-native'
+import { getModel } from '../Helper/ModelLoader2'
 
-import loadModelHelper from '../server/classificationModel'
-
-export default function Prediction({ route, navigation }) {
-  const [modelLoaded, setModelLoaded] = useState(false)
+const ModelLoadingComponent = () => {
+  const [isModelLoaded, setIsModelLoaded] = useState(false)
   const [modelData, setModelData] = useState()
-  const [article, setArticle] = useState()
-  const [color, setColor] = useState()
-  const [season, setSeason] = useState()
-  const [stil, setStil] = useState()
 
   useEffect(() => {
-    async function loadModel() {
+    const modelLoading = async () => {
       try {
-        const model = await loadModelHelper
-        setModelLoaded(true)
-        console.log('Model loaded successfully.')
+        const model = await getModel()
+        setIsModelLoaded(true)
+        console.log('successful')
+        return model
       } catch (error) {
-        console.error('Error loading or using Tensorflow model:', error)
+        console.error('not good', error)
       }
     }
-
-    loadModel()
+    modelLoading()
   }, [])
-  //const image = new Image()
-  const prediction = () => {
-    const image = '../server/output2.png'
-    image.onload = async () => {
-      const tensor = tf.browser.fromPixels(image)
-      const resized = tf.image.resizeBilinear(tensor, [224, 224])
-      const normalized = tf.image.perImageStandardization(resized)
-      const input = normalized.expandDims()
-
-      // Make predictions.
-      const prediction = model.predict(input)
-      const color = prediction.dataSync()[0]
-      const type = prediction.dataSync()[1]
-      console.log(
-        `The color of the object is ${color} and the type is ${type}.`
-      )
-    }
-  }
 
   return (
-    <View style={styles.container}>
-      <Text>
-        {modelLoaded ? 'Model loaded successfully' : 'Loading model...'}
-      </Text>
-      <Button title="Prediction" onPress={() => prediction()} />
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      {isModelLoaded ? (
+        <Text>Model loaded successfully!</Text>
+      ) : (
+        <Text>Loading model...</Text>
+      )}
     </View>
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-})
+export default ModelLoadingComponent

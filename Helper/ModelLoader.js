@@ -1,13 +1,15 @@
-import * as tf from '@tensorflow/tfjs'
-import * as mobilenet from '@tensorflow-models/mobilenet'
+import { Tflite } from 'react-native-tflite'
 
 async function loadModel() {
   try {
-    await tf.ready()
-    const model = await mobilenet.load()
+    console.log('hi')
+    const modelPath = './model2/model.tflite'
+    // Initialisieren von Tflite mit dem Pfad zum Modell
+    const model = await Tflite.loadModel(modelPath)
+    console.log('successful')
     return model
   } catch (error) {
-    console.error('Fehler beim Laden des Modells:', error)
+    console.error('Fehler beim Laden', error)
     throw error
   }
 }
