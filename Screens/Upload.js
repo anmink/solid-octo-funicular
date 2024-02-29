@@ -99,9 +99,14 @@ export default function Upload({ navigation }) {
         'http://192.168.2.177:8082/remove',
         imageByte
       )
-      const base64img = response.data
+      const data = response.data
+      const image = data.image
+      const type = data.type
+      const color = data.color
       navigation.navigate('Prediction', {
-        image: base64img,
+        image: image,
+        type: type,
+        color: color,
       })
     }
 

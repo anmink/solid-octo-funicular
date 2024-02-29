@@ -9,7 +9,7 @@ import {
 import axios from 'axios'
 
 export default function Prediction({ route, navigation }) {
-  const { image } = route.params
+  const { image, type, color } = route.params
 
   const apiCall = async () => {
     try {
@@ -35,6 +35,8 @@ export default function Prediction({ route, navigation }) {
         }}
         source={{ uri: `data:image/png;base64,${image}` }}
       />
+      <Text>{type}</Text>
+      <Text>{color}</Text>
     </View>
   )
 }

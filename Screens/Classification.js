@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Text, View, Button } from 'react-native'
-import { getModel } from '../Helper/ModelLoader2'
+//import { getModel } from '../Helper/ModelLoader2'
 
 const ModelLoadingComponent = () => {
   const [isModelLoaded, setIsModelLoaded] = useState(false)
