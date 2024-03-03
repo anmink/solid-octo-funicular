@@ -9,6 +9,7 @@ import {
   ScrollView
 } from 'react-native'
 import { useState, useEffect } from 'react'
+import axios from "axios"
 import UIButton from '../components/ui/UIButton'
 
 export default function Prediction({ route, navigation }) {
@@ -16,24 +17,44 @@ export default function Prediction({ route, navigation }) {
 
   const [selectedType, setSelectedType ] = useState();
   const [selectedColor, setSelectedColor ] = useState();
-  const [setSelectedSeason, selectedSeason ] = useState();
-  const [setSelectedReason, selectedReason ] = useState();
+  const [selectedSeason, setSelectedSeason ] = useState();
+  const [selectedReason, setSelectedReason ] = useState();
 
   useEffect(() => {
     setSelectedType(responseType)
     setSelectedColor(responseColor)
-    console.log('selectedColor', selectedColor)
-    console.log('selectedType', selectedType)
   }, [])
 
   const categoryType = ['Shirts', 'Bluse', 'Pullover', 'Jeans', 'Boots','Cardigan', 'Sneaker', 'High Heels', 'Hoodie', 'Rock', 'Hose', 'Kurze Hose', 'Langarm Shirt', 'Sweater', 'Top'];
-  const categoryColor = ['Blau', 'Braun', 'Gelb', 'Grau', 'Gruen', 'Lila', 'Magenta', 'Orange', 'Pink', 'Rot'];
+  const categoryColor = ['Blau', 'Braun', 'Gelb', 'Grau', 'Gruen', 'Lila', 'Magenta', 'Orange', 'Pink', 'Rot'];
   const categorySeason = ['Fruehling', 'Sommer', 'Herbst', 'Winter'];
   const categoryReason = ['Alle Styles', 'Classic', 'Casual', 'Streetwear', ' Party', 'Extravagant', 'Sport'];
 
   function handleButtonClickType(type) {
     setSelectedType(type)
-    console.log('handle', selectedType)
+  }
+
+  function handleButtonClickColor(color) {
+    setSelectedColor(color)
+  }
+
+  function handleButtonClickSeason(season) {
+    setSelectedSeason(season)
+  }
+
+  function handleButtonClickReason(reason) {
+    setSelectedReason(reason)
+  }
+
+  function onClickSave() {
+    axios.post('http://127.0.0.1:5000/put', {
+      type: selectedType,
+      color: selectedColor,
+      season: selectedSeason,
+      reason: selectedReason,
+      image: responseImage,
+    })
+    navigation.navigate('Test')
   }
 
   return (
@@ -56,25 +77,23 @@ export default function Prediction({ route, navigation }) {
         </View>
         <Text>Farbe des Kleidungsstück</Text>
         <View style={styles.buttonContainer}>
-          {/* {categoryColor.map((color) => (
-            <UIButton title={color} />
-          ))} */}
-          {categoryColor.map((color, index) => (
-            <Button key={index} title={color} color={responseColor === color ? 'red' : 'Black'} />
-          ))}
+          {categoryColor.map((color) => (
+            <UIButton title={color} onPress={() => handleButtonClickColor(color)}/>
+          ))} 
         </View>
         <Text>Jahreszeit</Text>
         <View style={styles.buttonContainer}>
           {categorySeason.map((season) => (
-            <UIButton title={season} />
+            <UIButton title={season} onPress={() => handleButtonClickSeason(season)}/>
           ))}
         </View>
         <Text>Kleidungsstil</Text>
         <View style={styles.buttonContainer}>
           {categoryReason.map((reason) => (
-            <UIButton title={reason} />
+            <UIButton title={reason} onPress={() => handleButtonClickReason(reason)}/>
           ))}
         </View>
+        <UIButton title={'Speichern'} onPress={() => onClickSave()} />
       </ScrollView>
     </SafeAreaView>
   )
