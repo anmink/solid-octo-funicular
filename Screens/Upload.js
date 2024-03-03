@@ -104,9 +104,9 @@ export default function Upload({ navigation }) {
       const type = data.type
       const color = data.color
       navigation.navigate('Prediction', {
-        image: image,
-        type: type,
-        color: color,
+        responseImage: image,
+        responseType: type,
+        responseColor: color,
       })
     }
 
