@@ -31,6 +31,7 @@ export default function Test({route}) {
       <Text>{data.data[0].type}</Text>
       <Text>{data.data[0].season}</Text>
       <Text>{data.data[0].reason}</Text>
+      <Text>hi</Text>
       <Image
           style={{
             width: 300,
